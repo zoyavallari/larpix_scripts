@@ -9,7 +9,7 @@ import numpy as np
 
 config_write_packet = 2
 data_packet = 0
-adc_count_register = 46 #TODO Check name
+testpulse_dac_amp_register = 46 #TODO Check name
 
 filenames  = dict(
                 amp5 = '/Users/zoya/work/dune/larpix/data/charge_injection/datalog_2019_09_20_20_33_05_PDT_.h5',
@@ -25,7 +25,7 @@ def getData(filename):
     d = d['packets']
     d = pd.DataFrame(d[0:len(d)])
     d = d[(d['type'] == data_packet) | ((d['type'] == config_write_packet) & 
-                                        (d['register'] == adc_count_register))]
+                                        (d['register'] == testpulse_dac_amp_register))]
     d = d.reset_index(drop = True)
     return d
 
