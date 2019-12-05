@@ -16,7 +16,12 @@ filenames  = dict(
                 amp10 = '/Users/zoya/work/dune/larpix/data/charge_injection/datalog_2019_09_20_20_24_41_PDT_.h5',
                 amp15 = '/Users/zoya/work/dune/larpix/data/charge_injection/datalog_2019_09_20_20_22_30_PDT_.h5'
                 )
+
+#adc_filter is used to calculate mean and std dev without including the tails of the distributions
 adc_filter = dict(amp5 = 175, amp10 = 200, amp15 = 225)
+
+output_plot_name = "ChargeInjection26_new.html"
+
 mean = dict(amp5 = None, amp10 = None, amp15 = None)
 sdev = dict(amp5 = None, amp10 = None, amp15 = None)
 
@@ -76,9 +81,11 @@ def main():
         ADC_list = []
         for i in data.index[1:]:
             if((data.loc[i,'type'] == data_packet) & (data.loc[i-1, 'type'] == config_write_packet)):
+                '''collecting adc counts from data packets that immediately follow config packet.
+                this eliminates the occasional second data peaks that follow the first data packet.'''
                 ADC_list.append(i)
         data = data.loc[ADC_list]
-        # Calculating the distribution of adc_counts
+        # Calculating the frequency distribution of adc_counts
         if(data_agg.empty):
             data_agg = data.groupby('adc_counts').agg(freq = ('adc_counts','count'))
         else:
@@ -89,7 +96,7 @@ def main():
     data_agg.columns = amp_list #renaming columns
 
     #Plot away!
-    plot_interactive(data_agg, "chargeinjection26_new.html" )
-
+    plot_interactive(data_agg, output_plot_name )
+    print("{} was written!". format(output_plot_name))
 if __name__ == '__main__':
     main()

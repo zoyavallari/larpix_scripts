@@ -11,6 +11,8 @@ config_write_packet = 2
 data_packet = 0
 global_threshold_register = 32
 
+output_plot_name = "LeakageCurrent_new.html"
+
 def col_filter(d, col, value):
     " Filter DataFrame d where col equals value"
     d_temp = d.loc[d[col] == value]
@@ -60,7 +62,8 @@ def calcAbsTime(d):
 
 
 def addDummyRows(df, threshold_value):
-    '''Adds a dummy row in data to make the plot line come back to the base of y axis'''
+    ''' Solely to make the plot pretty. No physics reason to add this dummy row.
+    Adds a dummy row in data to make the plot line come back to the base of y axis'''
     df2 = pd.DataFrame(columns = df.columns)
     line = pd.DataFrame({"t_abs": 0, 
                           "adc_counts": 128, 
@@ -141,7 +144,8 @@ def main():
 
     #data.to_csv("your_csv.csv")
 
-    plot_interactive(data, "leakagecurrent_new.html", "Leakage Current", "t_abs","adc_counts","global_threshold", True)
+    plot_interactive(data, output_plot_name, "Leakage Current", "t_abs","adc_counts","global_threshold", True)
+    print("{} was written!". format(output_plot_name))
 
 if __name__ == '__main__':
     main()
